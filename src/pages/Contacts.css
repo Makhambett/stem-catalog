@@ -1,0 +1,132 @@
+.contacts-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+/* ── Верхняя зелёная часть ── */
+.contacts-hero {
+  flex: 1;
+  position: relative;
+  background: #1a5c2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Волнистый паттерн фона */
+.contacts-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Линии-волны */
+.contacts-hero__bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.03) 40px,
+      rgba(255,255,255,0.03) 41px
+    );
+}
+
+.contacts-hero__logo {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.contacts-hero__logo-img {
+  width: 280px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* ── Нижняя часть с контактами ── */
+.contacts-info {
+  background: #0e3d1e;
+  padding: 20px 48px 24px;
+  flex-shrink: 0;
+}
+
+.contacts-info__divider {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 20px;
+}
+
+.contacts-info__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.contacts-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contacts-col__title {
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.contacts-col__desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.contacts-col__text {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  line-height: 1.6;
+  transition: color 0.2s;
+}
+
+.contacts-col__text:hover {
+  color: #fff;
+}
+
+.contacts-tg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  transition: all 0.25s ease;
+  letter-spacing: 0.02em;
+}
+
+.contacts-tg-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
+  transform: translateY(-2px);
+}

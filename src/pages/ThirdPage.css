@@ -1,0 +1,75 @@
+.third-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.third-breadcrumb {
+  padding: 16px 32px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #222;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.third-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+  padding: 0 32px 24px;
+  flex: 1;
+  min-height: 0;
+}
+
+.third-card {
+  position: relative;
+  background-color: #ebebeb;
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  min-height: 0;
+  padding: 12px 12px 8px;
+  gap: 8px;
+}
+
+.third-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.third-card__img-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.third-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.third-card__title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 600;
+  font-size: clamp(11px, 1vw, 15px);
+  color: #111;
+  text-align: center;
+  flex-shrink: 0;
+}

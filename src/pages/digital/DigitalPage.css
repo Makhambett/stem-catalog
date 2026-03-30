@@ -1,0 +1,131 @@
+.digital-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.digital-breadcrumb {
+  padding: 16px 32px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #222;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.digital-main {
+  padding: 0 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.digital-row {
+  display: grid;
+  gap: 16px;
+  min-height: 0;
+  flex: 1;
+}
+
+.digital-row--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.digital-card {
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  background: #ebebeb;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 0;
+  padding: 20px;
+  gap: 8px;
+}
+
+.digital-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+.digital-card__title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: clamp(11px, 1.1vw, 15px);
+  color: #111;
+  flex-shrink: 0;
+}
+
+/* ── Верхние карточки ── */
+.digital-card--img {
+  align-items: stretch;
+}
+
+.digital-card--img .digital-card__img-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.digital-card--img .digital-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Оранжевая карточка — только шары и ноут на оранжевом фоне */
+.digital-card--orange {
+  background: radial-gradient(circle at 65% 35%, #FF8B20, #EC6301);
+}
+
+.digital-card--orange .digital-card__title {
+  color: #fff;
+}
+
+/* ── Нижние карточки ── */
+.digital-card--text {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.digital-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.digital-card__desc {
+  font-size: 0.72rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.digital-card--text .digital-card__img-wrap {
+  width: 45%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.digital-card--text .digital-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}

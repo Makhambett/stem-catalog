@@ -1,0 +1,70 @@
+.second-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.second-breadcrumb {
+  padding: 16px 32px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #222;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.second-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16px;
+  padding: 0 32px 24px;
+  flex: 1;
+  min-height: 0;
+}
+
+.second-card {
+  position: relative;
+  background-color: #ebebeb;
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  min-height: 0;
+}
+
+.second-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.second-card__title {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: clamp(11px, 1vw, 15px);
+  color: #111;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.second-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  padding: 8px;
+}

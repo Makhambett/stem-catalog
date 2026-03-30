@@ -1,0 +1,99 @@
+.decor-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.decor-breadcrumb {
+  padding: 16px 32px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #222;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.decor-main {
+  padding: 0 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.decor-row {
+  display: grid;
+  gap: 16px;
+  min-height: 0;
+}
+
+.decor-row--3 {
+  grid-template-columns: repeat(3, 1fr);
+  flex: 1;
+}
+
+.decor-row--4 {
+  grid-template-columns: repeat(4, 1fr);
+  flex: 1;
+}
+
+.decor-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ebebeb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-decoration: none;
+  min-height: 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.decor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+.decor-card__title {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: clamp(10px, 1vw, 14px);
+  color: #fff;
+  background: rgba(0,0,0,0.45);
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.decor-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  padding: 8px;
+}
+
+.decor-card__double {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 4px;
+  padding: 8px;
+}
+
+.decor-card__double .decor-card__img {
+  width: 50%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0;
+}
