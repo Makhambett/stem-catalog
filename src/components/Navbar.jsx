@@ -1,11 +1,18 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
+import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
+import { useFavorites } from '../context/FavoritesContext'
 import './Navbar.css'
 
 export default function Navbar() {
   const [query, setQuery] = useState('')
   const { lang, setLang, t } = useLang()
+  const navigate = useNavigate()
+  const { totalCount, setIsOpen } = useCart()
+  const { user, logout, setShowModal } = useAuth()
+  const { favorites } = useFavorites()
 
   const categories = [
     { label: t.nav_design,    path: '/' },
@@ -19,6 +26,10 @@ export default function Navbar() {
 
   function handleSearch(e) {
     e.preventDefault()
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`)
+      setQuery('')
+    }
   }
 
   return (
@@ -63,13 +74,21 @@ export default function Navbar() {
         </form>
 
         <div className="navbar-icons">
-          <button className="nav-icon-btn" title={t.favorite}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-            <span>{t.favorite}</span>
-          </button>
 
+          {/* ИЗБРАННОЕ */}
+          <Link to="/favorites" className="nav-icon-btn" title={t.favorite}>
+            <div className="cart-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              {favorites.length > 0 && (
+                <span className="cart-badge">{favorites.length}</span>
+              )}
+            </div>
+            <span>{t.favorite}</span>
+          </Link>
+
+          {/* СРАВНИТЬ */}
           <button className="nav-icon-btn" title={t.compare}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
@@ -77,6 +96,7 @@ export default function Navbar() {
             <span>{t.compare}</span>
           </button>
 
+          {/* TELEGRAM */}
           <a
             href="https://t.me/stem_academia_bot"
             target="_blank"
@@ -89,6 +109,53 @@ export default function Navbar() {
             </svg>
             <span>Telegram</span>
           </a>
+
+          {/* КОРЗИНА */}
+          <button
+            className="nav-icon-btn nav-cart"
+            title="Корзина"
+            onClick={() => setIsOpen(true)}
+          >
+            <div className="cart-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              {totalCount > 0 && (
+                <span className="cart-badge">{totalCount}</span>
+              )}
+            </div>
+            <span>Корзина</span>
+          </button>
+
+          {/* ВХОД / ЛИЧНЫЙ КАБИНЕТ */}
+          {user ? (
+            <div className="nav-user">
+              {/* ← Link на /profile */}
+              <Link to="/profile" className="nav-icon-btn nav-account">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>{user.name}</span>
+              </Link>
+              <button className="nav-logout" onClick={logout} title="Выйти">✕</button>
+            </div>
+          ) : (
+            <button
+              className="nav-icon-btn nav-account"
+              title="Войти"
+              onClick={() => setShowModal(true)}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Войти</span>
+            </button>
+          )}
+
         </div>
       </div>
 

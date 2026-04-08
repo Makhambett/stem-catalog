@@ -1,0 +1,117 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #f1f1f1;
+  color: #222;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.modal-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #111;
+}
+
+.modal-product-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #222;
+}
+
+.modal-article {
+  font-size: 14px;
+  color: #777;
+  margin: 0 0 20px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-input {
+  width: 100%;
+  border: 1px solid #d8d8d8;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.modal-input:focus {
+  border-color: #2f6f55;
+}
+
+.modal-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.modal-success {
+  padding: 16px;
+  border-radius: 14px;
+  background: #eefaf1;
+  color: #1f7a3f;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.modal-success strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.modal-error {
+  margin-top: -4px;
+  font-size: 13px;
+  color: #d62828;
+}
+
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 16px;
+  }
+
+  .modal-box {
+    max-width: 100%;
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .modal-title {
+    font-size: 26px;
+    padding-right: 36px;
+  }
+}

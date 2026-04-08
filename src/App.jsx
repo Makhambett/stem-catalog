@@ -20,7 +20,7 @@ import Vstroenye from './pages/categories/Vstroenye'
 import Standartnye from './pages/categories/Standartnye'
 import Ulab from './pages/equipment/Ulab'
 import Labdisc from './pages/equipment/Labdisc'
-import Contacts from "./pages/Contacts";
+import Contacts from './pages/Contacts'
 import Gos from './pages/decor/Gos'
 import Panels3D from './pages/decor/Panels3D'
 import Lighting from './pages/decor/Lighting'
@@ -35,33 +35,27 @@ import Stanki from './pages/electro/Stanki'
 import Bytovaya from './pages/electro/Bytovaya'
 import Printers3D from './pages/electro/Printers3D'
 import DigitalPage from './pages/digital/DigitalPage'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import SearchPage from './pages/SearchPage'
+import { useCart } from './context/CartContext'
+import { useAuth } from './context/AuthContext'
+import CartDrawer from './components/CartDrawer'
+import AuthModal from './components/AuthModal'
+import FavoritesPage from './pages/FavoritesPage'
+import ProfilePage from './pages/ProfilePage'
 export default function App() {
+  const { isOpen } = useCart()
+  const { showModal } = useAuth()
+
   return (
     <>
       <Navbar />
+
+      {/* Корзина — выдвижная панель */}
+      {isOpen && <CartDrawer />}
+
+      {/* Модалка входа в личный кабинет */}
+      {showModal && <AuthModal />}
+
       <Routes>
         <Route path="/" element={<FirstPage />} />
         <Route path="/secondpage" element={<SecondPage />} />
@@ -79,9 +73,8 @@ export default function App() {
         <Route path="/secondpage/stulya/barnye" element={<Barnye />} />
         <Route path="/secondpage/shkafy" element={<Shkafy />} />
         <Route path="/secondpage/shkafy/vstroenye" element={<Vstroenye />} />
-        <Route path="/secondpage/shkafy/standartnye" element={<Standartnye />} /> 
+        <Route path="/secondpage/shkafy/standartnye" element={<Standartnye />} />
         <Route path="/equipment/ulab" element={<Ulab />} />
-        <Route path="/equipment" element={<EquipmentPage />} />
         <Route path="/equipment/labdisc" element={<Labdisc />} />
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/decor/gos" element={<Gos />} />
@@ -98,7 +91,11 @@ export default function App() {
         <Route path="/electro/bytovaya" element={<Bytovaya />} />
         <Route path="/electro/printers3d" element={<Printers3D />} />
         <Route path="/digital" element={<DigitalPage />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
+
       <Footer />
     </>
   )

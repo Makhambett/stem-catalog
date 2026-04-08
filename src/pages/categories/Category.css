@@ -243,3 +243,60 @@
   .divan-card { flex-direction: column; }
   .divan-card__gallery { min-width: unset; max-width: 100%; }
 }
+
+.btn-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 24px;
+  background: #1d6f42;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 10px;
+}
+
+.btn-cart:hover {
+  background: #155934;
+  transform: translateY(-1px);
+}
+
+.btn-cart--added {
+  background: #25a05e;
+  animation: cartPulse 0.3s ease;
+}
+
+.btn-favorite {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-favorite:hover {
+  border-color: #e53e3e;
+  color: #e53e3e;
+}
+
+.btn-favorite--active {
+  background: #fff5f5;
+  border-color: #e53e3e;
+  color: #e53e3e;
+}
+
+@keyframes cartPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}

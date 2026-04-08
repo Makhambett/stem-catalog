@@ -8,6 +8,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-main">
+
         {/* КОЛОНКА 1 — Бренд */}
         <div className="footer-col footer-col--brand">
           <div className="footer-logo">
@@ -16,10 +17,31 @@ export default function Footer() {
           </div>
           <p className="footer-tagline">{t.footer_tagline}</p>
           <div className="footer-socials">
-            <a href="#" title="Instagram">IG</a>
-            <a href="#" title="YouTube">YT</a>
+            <a
+              href="https://www.instagram.com/stem_academia?igsh=OGhjeHR5YnNoYXE5"
+              target="_blank"
+              rel="noreferrer"
+              title="Instagram"
+            >
+              IG
+            </a>
+            <a
+              href="https://www.youtube.com/@stemacademia6974"
+              target="_blank"
+              rel="noreferrer"
+              title="YouTube"
+            >
+              YT
+            </a>
             <a href="#" title="WhatsApp">WA</a>
-            <a href="https://t.me/stem_academia_bot" target="_blank" rel="noreferrer" title="Telegram">TG</a>
+            <a
+              href="https://t.me/stem_academia_bot"
+              target="_blank"
+              rel="noreferrer"
+              title="Telegram"
+            >
+              TG
+            </a>
           </div>
           <div className="footer-tg">
             <p>{t.footer_questions}</p>
@@ -44,8 +66,24 @@ export default function Footer() {
         <div className="footer-col">
           <h4 className="footer-col__title">{t.footer_company}</h4>
           <ul className="footer-col__list">
-            <li><Link to="/contacts">{t.footer_about}</Link></li>
-            <li><Link to="/contacts">{t.footer_projects}</Link></li>
+            <li>
+              <a
+                href="https://stem-academia.com/about-us/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t.footer_about}
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://stem-academia.com/pricing-plan/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t.footer_projects}
+              </a>
+            </li>
             <li><Link to="/contacts">{t.footer_partners}</Link></li>
             <li><Link to="/contacts">{t.footer_vacancies}</Link></li>
           </ul>
