@@ -4,7 +4,9 @@ import { login as apiLogin, register as apiRegister } from '../api/api'
 import './AuthModal.css'
 
 export default function AuthModal() {
-  const { showModal, closeModal, setUser, setUserEmail } = useAuth()
+  // ✅ Используем closeModal вместо setShowModal
+  const { login, register, closeModal } = useAuth()
+  
   const [mode, setMode] = useState('login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -15,24 +17,19 @@ export default function AuthModal() {
   // Закрытие по Escape
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === 'Escape' && showModal) closeModal()
+      if (e.key === 'Escape') closeModal()
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [showModal, closeModal])
+  }, [closeModal])
 
-  // Блокировка скролла при открытой модалке
+  // Блокировка скролла
   useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = 'hidden'
-    }
+    document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [showModal])
-
-  // ✅ Если модалка не должна показываться — не рендерим ничего
-  if (!showModal) return null
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -41,35 +38,12 @@ export default function AuthModal() {
     
     try {
       if (mode === 'register') {
-        const data = await apiRegister(email, password, name)
-        localStorage.setItem('stem_access_token', data.access_token)
-        
-        // Загружаем данные пользователя
-        const API_BASE = import.meta.env.VITE_API_URL_BACKEND || import.meta.env.VITE_API_URL || 'http://localhost:8000'
-        const res = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${data.access_token}` }
-        })
-        if (res.ok) {
-          const userData = await res.json()
-          setUser(userData)
-          setUserEmail(userData.email)
-        }
+        await register(name, email, password)
       } else {
-        const data = await apiLogin(email, password)
-        localStorage.setItem('stem_access_token', data.access_token)
-        
-        // Загружаем данные пользователя
-        const API_BASE = import.meta.env.VITE_API_URL_BACKEND || import.meta.env.VITE_API_URL || 'http://localhost:8000'
-        const res = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${data.access_token}` }
-        })
-        if (res.ok) {
-          const userData = await res.json()
-          setUser(userData)
-          setUserEmail(userData.email)
-        }
+        await login(email, password)
       }
-      closeModal()
+      // closeModal() вызывается внутри login/register в контексте, 
+      // но можно продублировать здесь для надежности, если нужно
     } catch (err) {
       setError(err.message || 'Произошла ошибка')
     } finally {
