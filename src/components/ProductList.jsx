@@ -5,11 +5,10 @@ import { useFavorites } from '../context/FavoritesContext'
 import { useCart } from '../context/CartContext'
 import './ProductList.css'
 
-// ✅ Базовый URL для заявок
-const API_BASE_URL = 
-  import.meta.env.VITE_API_URL_BACKEND || 
-  import.meta.env.VITE_API_URL || 
-  'http://localhost:8000/api'
+// ✅ ИСПРАВЛЕНО: убран VITE_API_URL из fallback
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL_BACKEND ||
+  'http://localhost:8000'
 
 // ─── Модалка заявки ───────────────────────────────────────────
 function ApplicationModal({ product, onClose }) {
@@ -24,7 +23,6 @@ function ApplicationModal({ product, onClose }) {
   const [phoneError, setPhoneError] = useState('')
   const [nameError, setNameError] = useState('')
 
-  // Закрытие по Escape
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'Escape') onClose()
@@ -33,7 +31,6 @@ function ApplicationModal({ product, onClose }) {
     return () => document.removeEventListener('keydown', handler)
   }, [onClose])
 
-  // Блокировка скролла
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = 'unset' }
@@ -69,8 +66,8 @@ function ApplicationModal({ product, onClose }) {
 
     setLoading(true)
     try {
-      // ✅ ИСПРАВЛЕНО: используем API_BASE_URL вместо localhost
-      const response = await fetch(`${API_BASE_URL}/applications/`, {
+      // ✅ ИСПРАВЛЕНО: явно /api/applications/
+      const response = await fetch(`${API_BASE_URL}/api/applications/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +94,7 @@ function ApplicationModal({ product, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose} type="button">×</button>
-        
+
         {sent ? (
           <div className="modal-success">
             <strong>✅ Заявка отправлена!</strong>
@@ -166,23 +163,20 @@ function ProductCard({ product }) {
   const [showModal, setShowModal] = useState(false)
   const [activeColor, setActiveColor] = useState(0)
   const [addedToCart, setAddedToCart] = useState(false)
-  
+
   const { t } = useLang()
   const { toggleFavorite, isFavorite } = useFavorites()
   const { addToCart } = useCart()
 
-  // Обработка изображений (массив или строка)
   const img = Array.isArray(product.imgs) ? product.imgs[0] : product.img
   const size = Array.isArray(product.size) ? product.size.join(', ') : product.size
   const material = Array.isArray(product.material) ? product.material.join(', ') : product.material
   const colors = product.colors || []
-  
-  // Проверка избранного
+
   const inFavorite = isFavorite(product.id)
 
   const handleClose = useCallback(() => setShowModal(false), [])
 
-  // Добавление в корзину
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
@@ -195,7 +189,6 @@ function ProductCard({ product }) {
     setTimeout(() => setAddedToCart(false), 2000)
   }
 
-  // Добавление в избранное
   const handleFavoriteClick = () => {
     toggleFavorite(product)
   }
@@ -203,7 +196,6 @@ function ProductCard({ product }) {
   return (
     <>
       <div className="divan-card">
-        {/* Галерея */}
         <div className="divan-card__gallery">
           <img src={img} alt={product.title} className="divan-card__main-img" loading="lazy" />
           {product.in_stock === false && (
@@ -211,12 +203,10 @@ function ProductCard({ product }) {
           )}
         </div>
 
-        {/* Информация */}
         <div className="divan-card__info">
           <h2 className="divan-card__title">{product.title}</h2>
           <p className="divan-card__desc">{product.description}</p>
 
-          {/* Выбор цвета */}
           {colors.length > 0 && (
             <div className="divan-card__section">
               <span className="divan-card__label">
@@ -237,7 +227,6 @@ function ProductCard({ product }) {
             </div>
           )}
 
-          {/* Характеристики */}
           <div className="divan-card__section">
             <span className="divan-card__label">Характеристики:</span>
             <table className="divan-card__table">
@@ -264,24 +253,22 @@ function ProductCard({ product }) {
             </table>
           </div>
 
-          {/* Доставка */}
           <div className="divan-card__delivery">
             <span>🚚 {t.delivery || 'Доставка по Казахстану'}</span>
             <span>📍 {t.pickup || 'Самовывоз'}</span>
           </div>
 
-          {/* Кнопки действий */}
           <div className="divan-card__actions">
-            <button 
-              className="btn-add-to-cart" 
+            <button
+              className="btn-add-to-cart"
               onClick={handleAddToCart}
               disabled={addedToCart || product.in_stock === false}
               type="button"
             >
               {addedToCart ? '✓ Добавлено!' : '🛒 В корзину'}
             </button>
-            
-            <button 
+
+            <button
               className={`btn-favorite ${inFavorite ? 'active' : ''}`}
               onClick={handleFavoriteClick}
               type="button"
@@ -291,12 +278,10 @@ function ProductCard({ product }) {
             </button>
           </div>
 
-          {/* Кнопка заявки (на всю ширину) */}
           <button className="btn-order-full" onClick={() => setShowModal(true)} type="button">
             📝 Оставить заявку
           </button>
 
-          {/* Доп. кнопки */}
           <div className="divan-card__share">
             <button type="button">↗ {t.share || 'Поделиться'}</button>
             <button type="button">⚖ {t.compare_btn || 'Сравнить'}</button>
@@ -304,7 +289,6 @@ function ProductCard({ product }) {
         </div>
       </div>
 
-      {/* Модальное окно */}
       {showModal && <ApplicationModal product={product} onClose={handleClose} />}
     </>
   )
@@ -327,7 +311,6 @@ export default function ProductList({ products, title, backPath, backLabel }) {
 
   return (
     <div className="divany-page">
-      {/* Хлебные крошки */}
       <div className="divany-breadcrumb">
         <Link to="/" className="breadcrumb-link">{t.home || 'Главная'}</Link>
         <span> / </span>
@@ -340,12 +323,10 @@ export default function ProductList({ products, title, backPath, backLabel }) {
         <span>{title}</span>
       </div>
 
-      {/* Заголовок */}
       <h1 className="divany-title">
         {title} <span>{products.length} товаров</span>
       </h1>
 
-      {/* Сетка товаров */}
       <div className="divany-list">
         {products.map((p) => (
           <ProductCard key={p.id || p.article} product={p} />
