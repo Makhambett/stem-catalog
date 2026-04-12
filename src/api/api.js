@@ -1,12 +1,14 @@
 // ✅ Базовый URL: приоритет продакшена → локальной разработки
+// ❗ НЕ добавляем /api сюда, потому что auth эндпоинты не имеют этого префикса
 const BASE_URL = 
   import.meta.env.VITE_API_URL_BACKEND || 
   import.meta.env.VITE_API_URL || 
   'http://localhost:8000'
 
+// ===== ПРОДУКТЫ (с /api/) =====
 export async function getProducts(params = {}) {
   const query = new URLSearchParams(params).toString()
-  const url = `${BASE_URL}/products${query ? '?' + query : ''}`
+  const url = `${BASE_URL}/api/products${query ? '?' + query : ''}`
   const res = await fetch(url)
   
   if (!res.ok) {
@@ -17,7 +19,7 @@ export async function getProducts(params = {}) {
 }
 
 export async function getProductById(id) {
-  const res = await fetch(`${BASE_URL}/products/${id}`)
+  const res = await fetch(`${BASE_URL}/api/products/${id}`)
   
   if (!res.ok) {
     throw new Error(`Товар не найден: ${id}`)
@@ -27,12 +29,13 @@ export async function getProductById(id) {
 }
 
 export async function getCategories() {
-  const res = await fetch(`${BASE_URL}/categories`)
+  const res = await fetch(`${BASE_URL}/api/categories`)
   return res.json()
 }
 
+// ===== ЗАКАЗЫ И ЗАЯВКИ (с /api/) =====
 export async function createOrder(data) {
-  const res = await fetch(`${BASE_URL}/orders`, {
+  const res = await fetch(`${BASE_URL}/api/orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
@@ -41,7 +44,8 @@ export async function createOrder(data) {
 }
 
 export async function createApplication(data) {
-  const res = await fetch(`${BASE_URL}/applications`, {
+  // ✅ ИСПРАВЛЕНО: добавлен /api/ префикс
+  const res = await fetch(`${BASE_URL}/api/applications`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
@@ -49,14 +53,14 @@ export async function createApplication(data) {
   return res.json()
 }
 
-// ✅ НОВЫЕ ФУНКЦИИ ДЛЯ АВТОРИЗАЦИИ
-
+// ===== АВТОРИЗАЦИЯ (БЕЗ /api/!) =====
 export async function login(email, password) {
   const body = new URLSearchParams()
-  body.append('username', email)  // FastAPI OAuth2 ожидает 'username'
+  body.append('username', email)
   body.append('password', password)
   body.append('grant_type', 'password')
 
+  // ✅ Auth endpoints: /auth/login (без /api/)
   const res = await fetch(`${BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -72,10 +76,10 @@ export async function login(email, password) {
 }
 
 export async function register(email, password, name) {
+  // ✅ Auth endpoints: /auth/register (без /api/)
   const res = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    // ✅ ИСПРАВЛЕНО: отправляем 'name', как ждет auth.py
     body: JSON.stringify({ name, email, password })
   })
 
@@ -88,6 +92,7 @@ export async function register(email, password, name) {
 }
 
 export async function getCurrentUser(token) {
+  // ✅ Auth endpoints: /auth/me (без /api/)
   const res = await fetch(`${BASE_URL}/auth/me`, {
     headers: {
       'Content-Type': 'application/json',
