@@ -5,18 +5,13 @@ import { getProducts } from '../api/api'
 import { useLang } from '../i18n/LanguageContext'
 import './SearchPage.css'
 
-// ==========================================
-// 📦 КОМПОНЕНТ КАРТОЧКИ ТОВАРА
-// ==========================================
 const ProductCard = ({ product }) => {
-  // Анимация появления при скролле
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
   })
 
-  // Формируем ссылку на детальную страницу товара
   const productLink = product.path || product.url || `/product/${product.slug || product.id}`
 
   return (
@@ -27,7 +22,6 @@ const ProductCard = ({ product }) => {
       aria-label={`Перейти к товару: ${product.title}`}
       role="listitem"
     >
-      {/* Медиа-блок */}
       <div className="search-card__media">
         <img
           src={product.img}
@@ -38,8 +32,6 @@ const ProductCard = ({ product }) => {
           alt={`Купить ${product.title?.toLowerCase()} в STEM Academia`}
           className="search-card__img"
         />
-        
-        {/* Бейджи (Новинка / Скидка) */}
         {product.badge && (
           <span className={`badge badge--${product.badge}`}>
             {product.badge === 'new' ? 'NEW' : 'SALE'}
@@ -47,25 +39,15 @@ const ProductCard = ({ product }) => {
         )}
       </div>
 
-      {/* Информация о товаре */}
       <div className="search-card__info">
         <h3 className="search-card__title">{product.title}</h3>
         <p className="search-card__article">Арт: {product.article}</p>
-        
-        {/* Краткое описание (если есть в данных) */}
-        {product.description && (
-          <p className="search-card__desc">{product.description}</p>
-        )}
-        
-        {/* ✅ Кнопка "Заказать" удалена */}
+        {product.description && <p className="search-card__desc">{product.description}</p>}
       </div>
     </Link>
   )
 }
 
-// ==========================================
-// 📄 ОСНОВНАЯ СТРАНИЦА ПОИСКА
-// ==========================================
 export default function SearchPage() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('q') || ''
@@ -73,7 +55,6 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true)
   const { t } = useLang()
 
-  // Загрузка результатов поиска
   useEffect(() => {
     if (query) {
       setLoading(true)
@@ -89,7 +70,6 @@ export default function SearchPage() {
     }
   }, [query])
 
-  // Микроразметка Schema.org для SEO
   useEffect(() => {
     if (!query || results.length === 0) return
 
@@ -121,19 +101,16 @@ export default function SearchPage() {
 
   return (
     <div className="search-page">
-      {/* Хлебные крошки */}
       <nav className="search-breadcrumb" aria-label="Breadcrumb">
         <Link to="/" className="breadcrumb-link">{t.home}</Link>
         <span className="separator" aria-hidden="true"> / </span>
         <span className="current">Поиск: "{query}"</span>
       </nav>
 
-      {/* Заголовок */}
       <h1 className="search-title">
         Результаты поиска: <span>"{query}"</span>
       </h1>
 
-      {/* Состояния загрузки / пусто / результаты */}
       {loading ? (
         <p className="search-loading">Загрузка товаров...</p>
       ) : results.length === 0 ? (

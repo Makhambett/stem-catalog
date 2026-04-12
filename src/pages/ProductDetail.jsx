@@ -2,9 +2,14 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext'
 import { useCart } from '../context/CartContext'
+import { createApplication } from '../api/api'
 import './ProductDetail.css'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+// ✅ Базовый URL API
+const API_BASE_URL = 
+  import.meta.env.VITE_API_URL_BACKEND || 
+  import.meta.env.VITE_API_URL || 
+  'http://localhost:8000/api'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -15,13 +20,8 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   
-  // Состояние для модалки заявки
   const [showModal, setShowModal] = useState(false)
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    comment: ''
-  })
+  const [formData, setFormData] = useState({ name: '', phone: '', comment: '' })
   const [submitting, setSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
 
@@ -56,25 +56,21 @@ export default function ProductDetail() {
     if (product) addToCart(product)
   }
 
-  // Открытие модалки
   const handleOpenModal = () => {
     setShowModal(true)
     setSubmitSuccess(false)
     setFormData({ name: '', phone: '', comment: '' })
   }
 
-  // Закрытие модалки
   const handleCloseModal = () => {
     setShowModal(false)
   }
 
-  // Обработка ввода
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  // Отправка заявки
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
@@ -86,27 +82,13 @@ export default function ProductDetail() {
         comment: formData.comment,
         product_name: product.title,
         article: product.article,
-        product_url: `${window.location.href}`
+        product_url: window.location.href
       }
 
-      const response = await fetch(`${API_BASE_URL}/applications/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(applicationData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Не удалось отправить заявку')
-      }
-
+      await createApplication(applicationData)
       setSubmitSuccess(true)
       
-      // Закрыть модалку через 2 секунды
-      setTimeout(() => {
-        setShowModal(false)
-      }, 2000)
+      setTimeout(() => setShowModal(false), 2000)
       
     } catch (err) {
       console.error('Ошибка отправки заявки:', err)
@@ -116,7 +98,6 @@ export default function ProductDetail() {
     }
   }
 
-  // Вспомогательная функция для категории
   const getCategoryName = (cat) => {
     if (!cat) return null
     if (typeof cat === 'string') return cat
@@ -128,16 +109,10 @@ export default function ProductDetail() {
 
   const categoryName = getCategoryName(product?.category)
 
-  // Загрузка
   if (loading) {
-    return (
-      <div className="product-loading">
-        <div className="loading-spinner">Загрузка товара...</div>
-      </div>
-    )
+    return <div className="product-loading"><div className="loading-spinner">Загрузка товара...</div></div>
   }
 
-  // Ошибка
   if (error) {
     return (
       <div className="product-error">
@@ -148,7 +123,6 @@ export default function ProductDetail() {
     )
   }
 
-  // Товар не найден
   if (!product) {
     return (
       <div className="product-not-found">
@@ -161,7 +135,6 @@ export default function ProductDetail() {
   return (
     <>
       <div className="product-detail-page">
-        {/* Хлебные крошки */}
         <nav className="product-breadcrumb">
           <Link to="/" className="breadcrumb-link">{t.home}</Link>
           <span className="separator"> / </span>
@@ -175,7 +148,6 @@ export default function ProductDetail() {
         </nav>
 
         <div className="product-container">
-          {/* Галерея */}
           <div className="product-gallery">
             <div className="product-main-image">
               <img 
@@ -187,22 +159,17 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Информация */}
           <div className="product-info">
             <h1 className="product-title">{product.title}</h1>
             
-            {product.description && (
-              <p className="product-description">{product.description}</p>
-            )}
+            {product.description && <p className="product-description">{product.description}</p>}
 
-            {/* Артикул */}
             {product.article && (
               <div className="product-article">
                 <span>Артикул:</span> <strong>{product.article}</strong>
               </div>
             )}
 
-            {/* Цена */}
             {product.price && (
               <div className="product-price">
                 <span className="price-current">{Number(product.price).toLocaleString('ru-KZ')} ₸</span>
@@ -212,23 +179,17 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Доставка */}
             <div className="product-delivery">
               <div className="delivery-item">🚚 Доставка по Казахстану</div>
               <div className="delivery-item">📍 Самовывоз: Астана, Домалак-ана 26</div>
             </div>
 
-            {/* Кнопки */}
             <div className="product-actions">
-              <button 
-                className="btn-add-to-cart" 
-                onClick={handleAddToCart}
-              >
+              <button className="btn-add-to-cart" onClick={handleAddToCart}>
                 🛒 В корзину
               </button>
             </div>
 
-            {/* ✅ Кнопка "Оставить заявку" — открывает модалку */}
             <button className="btn-application" onClick={handleOpenModal}>
               📝 Оставить заявку
             </button>
@@ -236,7 +197,6 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* 📋 МОДАЛКА ЗАЯВКИ */}
       {showModal && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -258,53 +218,24 @@ export default function ProductDetail() {
               <form onSubmit={handleSubmit} className="application-form">
                 <div className="form-group">
                   <label htmlFor="name">Ваше имя *</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Иван Иванов"
-                  />
+                  <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required placeholder="Иван Иванов" />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="phone">Телефон *</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="+7 (___) ___-__-__"
-                  />
+                  <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} required placeholder="+7 (___) ___-__-__" />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="comment">Комментарий</label>
-                  <textarea
-                    id="comment"
-                    name="comment"
-                    value={formData.comment}
-                    onChange={handleInputChange}
-                    placeholder="Дополнительная информация (необязательно)"
-                    rows="3"
-                  />
+                  <textarea id="comment" name="comment" value={formData.comment} onChange={handleInputChange} placeholder="Дополнительная информация (необязательно)" rows="3" />
                 </div>
 
-                <button 
-                  type="submit" 
-                  className="btn-submit"
-                  disabled={submitting}
-                >
+                <button type="submit" className="btn-submit" disabled={submitting}>
                   {submitting ? 'Отправка...' : 'Отправить заявку'}
                 </button>
 
-                <p className="form-note">
-                  🔒 Ваши данные защищены. Мы не передаём их третьим лицам.
-                </p>
+                <p className="form-note">🔒 Ваши данные защищены. Мы не передаём их третьим лицам.</p>
               </form>
             )}
           </div>

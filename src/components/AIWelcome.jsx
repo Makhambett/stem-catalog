@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import './AIWelcome.css'
 
-// Базовый URL API (берём из env или используем дефолт)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+// ✅ Базовый URL API: проверяем VITE_API_URL_BACKEND (для продакшена) или VITE_API_URL (локально)
+const API_BASE_URL = 
+  import.meta.env.VITE_API_URL_BACKEND || 
+  import.meta.env.VITE_API_URL || 
+  'http://localhost:8000/api'
 
 export default function AIWelcome({ onClose }) {
-  // Сообщения чата
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -22,7 +24,6 @@ export default function AIWelcome({ onClose }) {
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
-  // Быстрые вопросы для старта диалога
   const quickQuestions = [
     "🪑 Какие есть диваны?",
     "🚚 Условия доставки",
@@ -45,7 +46,6 @@ export default function AIWelcome({ onClose }) {
     const text = textToSend || input
     if (!text.trim()) return
 
-    // Добавляем сообщение пользователя
     const userMessage = {
       id: Date.now(),
       role: 'user',
@@ -61,12 +61,8 @@ export default function AIWelcome({ onClose }) {
     try {
       const response = await fetch(`${API_BASE_URL}/ai/chat`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          message: text.trim()  // 🔥 Ключ 'message' как ждёт бэкенд
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text.trim() })
       })
 
       if (!response.ok) {
@@ -77,7 +73,6 @@ export default function AIWelcome({ onClose }) {
 
       const data = await response.json()
       
-      // Добавляем ответ ИИ
       const aiMessage = {
         id: Date.now() + 1,
         role: 'ai',
@@ -91,7 +86,6 @@ export default function AIWelcome({ onClose }) {
       console.error('💥 Ошибка отправки:', err)
       setError('Не удалось связаться с помощником. Попробуйте позже.')
       
-      // Fallback-сообщение
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'ai',
@@ -103,7 +97,6 @@ export default function AIWelcome({ onClose }) {
     }
   }
 
-  // Обработка нажатия Enter
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -111,15 +104,10 @@ export default function AIWelcome({ onClose }) {
     }
   }
 
-  // Форматирование времени
   const formatTime = (date) => {
-    return date.toLocaleTimeString('ru-RU', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
+    return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
   }
 
-  // Простая подсветка ссылок в тексте
   const renderTextWithLinks = (text) => {
     const urlRegex = /\[([^\]]+)\]\(([^)]+)\)/g
     const parts = []
@@ -131,13 +119,7 @@ export default function AIWelcome({ onClose }) {
         parts.push(text.slice(lastIndex, match.index))
       }
       parts.push(
-        <a 
-          key={match.index} 
-          href={match[2]} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="chat-link"
-        >
+        <a key={match.index} href={match[2]} target="_blank" rel="noopener noreferrer" className="chat-link">
           {match[1]}
         </a>
       )
@@ -155,7 +137,6 @@ export default function AIWelcome({ onClose }) {
     <div className="ai-welcome-overlay" onClick={onClose}>
       <div className="ai-chat-container" onClick={(e) => e.stopPropagation()}>
         
-        {/* Шапка чата */}
         <header className="ai-chat-header">
           <div className="ai-header-content">
             <div className="ai-avatar">
@@ -167,27 +148,14 @@ export default function AIWelcome({ onClose }) {
               <p className="ai-header-subtitle">онлайн • отвечает за ~2 сек</p>
             </div>
           </div>
-          <button 
-            className="ai-close-btn" 
-            onClick={onClose}
-            aria-label="Закрыть чат"
-            title="Закрыть"
-          >
-            ×
-          </button>
+          <button className="ai-close-btn" onClick={onClose} aria-label="Закрыть чат">×</button>
         </header>
 
-        {/* Область сообщений */}
         <div className="ai-chat-messages" role="log" aria-live="polite">
           {messages.map((msg) => (
-            <div 
-              key={msg.id} 
-              className={`message-wrapper ${msg.role}`}
-            >
+            <div key={msg.id} className={`message-wrapper ${msg.role}`}>
               <div className="message-bubble">
-                <p className="message-text">
-                  {renderTextWithLinks(msg.text)}
-                </p>
+                <p className="message-text">{renderTextWithLinks(msg.text)}</p>
                 <time className="message-time" dateTime={msg.timestamp.toISOString()}>
                   {formatTime(msg.timestamp)}
                 </time>
@@ -195,7 +163,6 @@ export default function AIWelcome({ onClose }) {
             </div>
           ))}
           
-          {/* Индикатор набора */}
           {isTyping && (
             <div className="message-wrapper ai">
               <div className="message-bubble typing">
@@ -206,7 +173,6 @@ export default function AIWelcome({ onClose }) {
             </div>
           )}
           
-          {/* Сообщение об ошибке */}
           {error && (
             <div className="message-wrapper error">
               <div className="message-bubble error">
@@ -215,21 +181,15 @@ export default function AIWelcome({ onClose }) {
             </div>
           )}
           
-          {/* Якорь для скролла */}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Быстрые вопросы (показывать только если мало сообщений) */}
         {messages.length <= 2 && !isTyping && (
           <div className="ai-quick-questions">
             <p className="quick-questions-label">Быстрые вопросы:</p>
             <div className="quick-questions-list">
               {quickQuestions.map((question, idx) => (
-                <button
-                  key={idx}
-                  className="quick-question-btn"
-                  onClick={() => handleSend(question.replace(/^[\w\s]+/, '').trim())}
-                >
+                <button key={idx} className="quick-question-btn" onClick={() => handleSend(question.replace(/^[\w\s]+/, '').trim())}>
                   {question}
                 </button>
               ))}
@@ -237,7 +197,6 @@ export default function AIWelcome({ onClose }) {
           </div>
         )}
 
-        {/* Поле ввода */}
         <footer className="ai-chat-input">
           <textarea
             ref={inputRef}
@@ -256,27 +215,17 @@ export default function AIWelcome({ onClose }) {
             onClick={() => handleSend()}
             disabled={isTyping || !input.trim()}
             aria-label="Отправить сообщение"
-            title="Отправить (Enter)"
           >
-            <svg 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
-              className="send-icon"
-            >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="send-icon">
               <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" />
             </svg>
           </button>
         </footer>
 
-        {/* Подвал с подсказкой */}
         <div className="ai-chat-footer">
           <small>
             💡 ИИ может ошибаться. Для точной информации пишите в 
-            <a href="https://wa.me/77000395877" target="_blank" rel="noopener" className="footer-link">
-              WhatsApp
-            </a>
+            <a href="https://wa.me/77000395877" target="_blank" rel="noopener" className="footer-link">WhatsApp</a>
           </small>
         </div>
 
