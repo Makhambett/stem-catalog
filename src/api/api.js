@@ -71,11 +71,12 @@ export async function login(email, password) {
   return res.json()
 }
 
-export async function register(email, password, full_name) {
+export async function register(email, password, name) {
   const res = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, full_name })
+    // ✅ ИСПРАВЛЕНО: отправляем 'name', как ждет auth.py
+    body: JSON.stringify({ name, email, password })
   })
 
   if (!res.ok) {
