@@ -4,7 +4,6 @@ import { login as apiLogin, register as apiRegister } from '../api/api'
 import './AuthModal.css'
 
 export default function AuthModal() {
-  // ✅ Используем closeModal вместо setShowModal
   const { login, register, closeModal } = useAuth()
   
   const [mode, setMode] = useState('login')
@@ -42,8 +41,6 @@ export default function AuthModal() {
       } else {
         await login(email, password)
       }
-      // closeModal() вызывается внутри login/register в контексте, 
-      // но можно продублировать здесь для надежности, если нужно
     } catch (err) {
       setError(err.message || 'Произошла ошибка')
     } finally {
@@ -126,7 +123,28 @@ export default function AuthModal() {
           )}
         </p>
 
-        <button className="auth-box__close" onClick={closeModal} type="button" aria-label="Закрыть">✕</button>
+        {/* ✅ ИСПРАВЛЕННАЯ КНОПКА ЗАКРЫТИЯ */}
+        <button 
+          className="auth-box__close" 
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            closeModal(); 
+          }} 
+          type="button" 
+          aria-label="Закрыть"
+          style={{ 
+            position: 'absolute', 
+            top: '15px', 
+            right: '15px', 
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            fontSize: '24px',
+            zIndex: 10
+          }}
+        >
+          ✕
+        </button>
       </div>
     </div>
   )
