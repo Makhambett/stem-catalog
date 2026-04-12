@@ -5,6 +5,12 @@ import { useFavorites } from '../context/FavoritesContext'
 import { useCart } from '../context/CartContext'
 import './ProductList.css'
 
+// ✅ Базовый URL для заявок
+const API_BASE_URL = 
+  import.meta.env.VITE_API_URL_BACKEND || 
+  import.meta.env.VITE_API_URL || 
+  'http://localhost:8000/api'
+
 // ─── Модалка заявки ───────────────────────────────────────────
 function ApplicationModal({ product, onClose }) {
   const [form, setForm] = useState({
@@ -63,7 +69,8 @@ function ApplicationModal({ product, onClose }) {
 
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:8000/api/applications/', {
+      // ✅ ИСПРАВЛЕНО: используем API_BASE_URL вместо localhost
+      const response = await fetch(`${API_BASE_URL}/applications/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useUserEmail } from './UserEmailContext'
-import { login as apiLogin, register as apiRegister, logout as apiLogout } from '../api/api'
+import { login as apiLogin, register as apiRegister, logout as apiLogout, getCurrentUser } from '../api/api'
 
 const AuthContext = createContext()
 
@@ -13,7 +13,7 @@ const API_BASE =
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  const [loading, setLoading] = useState(true)  // ✅ Индикатор загрузки
+  const [loading, setLoading] = useState(true)
   const { setUserEmail } = useUserEmail()
 
   // Проверка токена при загрузке
@@ -23,17 +23,9 @@ export function AuthProvider({ children }) {
       
       if (token) {
         try {
-          const res = await fetch(`${API_BASE}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-          
-          if (res.ok) {
-            const data = await res.json()
-            setUser(data)
-            setUserEmail(data.email)
-          } else {
-            localStorage.removeItem('stem_access_token')
-          }
+          const userData = await getCurrentUser(token)
+          setUser(userData)
+          setUserEmail(userData.email)
         } catch (err) {
           console.error('Auth check error:', err)
           localStorage.removeItem('stem_access_token')
@@ -49,34 +41,25 @@ export function AuthProvider({ children }) {
     try {
       const data = await apiRegister(email, password, name)
       localStorage.setItem('stem_access_token', data.access_token)
-      setUser(data.user)
-      setUserEmail(data.user.email)
+      const userData = await getCurrentUser(data.access_token)
+      setUser(userData)
+      setUserEmail(userData.email)
       setShowModal(false)
-      return data
+      return userData
     } catch (err) {
-      throw err  // Пробрасываем ошибку вверх для обработки в компоненте
+      throw err
     }
   }
 
   const login = async (email, password) => {
     try {
       const data = await apiLogin(email, password)
-      // FastAPI OAuth2 возвращает { access_token, token_type }
-      // Нам нужно отдельно запросить данные пользователя
-      const res = await fetch(`${API_BASE}/auth/me`, {
-        headers: { Authorization: `Bearer ${data.access_token}` }
-      })
-      
-      if (res.ok) {
-        const userData = await res.json()
-        localStorage.setItem('stem_access_token', data.access_token)
-        setUser(userData)
-        setUserEmail(userData.email)
-        setShowModal(false)
-        return userData
-      } else {
-        throw new Error('Failed to fetch user data')
-      }
+      localStorage.setItem('stem_access_token', data.access_token)
+      const userData = await getCurrentUser(data.access_token)
+      setUser(userData)
+      setUserEmail(userData.email)
+      setShowModal(false)
+      return userData
     } catch (err) {
       throw err
     }
@@ -91,7 +74,6 @@ export function AuthProvider({ children }) {
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
-  // Пока проверяем авторизацию — показываем лоадер
   if (loading) {
     return <div style={{ display: 'none' }}>{children}</div>
   }
