@@ -9,6 +9,7 @@ import CartDrawer from './components/CartDrawer'
 import AuthModal from './components/AuthModal'
 import RoqedPage from './pages/digital/RoqedPage'
 import StemPlatformPage from './pages/digital/StemPlatformPage'
+import Kuhnya from './pages/categories/Kuhnya'
 // Страницы
 import FirstPage from './pages/FirstPage'
 import SecondPage from './pages/SecondPage'
@@ -35,7 +36,7 @@ import Barnye from './pages/categories/Barnye'
 import Shkafy from './pages/categories/Shkafy'
 import Vstroenye from './pages/categories/Vstroenye'
 import Standartnye from './pages/categories/Standartnye'
-import Kuxnya from './pages/categories/Kuhnya'
+
 // Оборудование
 import Ulab from './pages/equipment/Ulab'
 import Labdisc from './pages/equipment/Labdisc'
@@ -110,7 +111,7 @@ export default function App() {
         <Route path="/secondpage/shkafy/vstroenye" element={<Vstroenye />} />
         <Route path="/secondpage/shkafy/standartnye" element={<Standartnye />} />
         <Route path="/secondpage/stoly/party" element={<Party />} />
-        <Route path="/secondpage/kuxnya" element={<Kuxnya />} />
+        <Route path="/secondpage/kuhnya" element={<Kuhnya />} />
         {/* Оборудование */}
         <Route path="/equipment/ulab" element={<Ulab />} />
         <Route path="/equipment/labdisc" element={<Labdisc />} />
