@@ -61,34 +61,39 @@ export default function CartDrawer() {
 
   return (
     <>
-      {/* Оверлей */}
       <div className="cart-overlay" onClick={handleClose} />
 
       <div className="cart-drawer">
-        <div className="cart-header">
+        {/* Хедер */}
+        <div className="cart-drawer__header">
           <h2>Корзина</h2>
           <button
+            className="cart-drawer__close"
             onClick={(e) => { e.stopPropagation(); handleClose() }}
             type="button"
             aria-label="Закрыть корзину"
-            style={{ cursor: 'pointer', background: 'none', border: 'none', fontSize: '24px', padding: '5px', lineHeight: 1, zIndex: 10 }}
           >✕</button>
         </div>
 
         {cartItems.length === 0 ? (
-          <div className="cart-empty">
+          <div className="cart-drawer__empty">
             <span>🛒</span>
             <p>Ваша корзина пуста</p>
-            <button className="btn-continue" onClick={handleClose}>
+            <button className="cart-drawer__checkout" onClick={handleClose} type="button">
               Продолжить покупки
             </button>
           </div>
         ) : (
           <>
-            <div className="cart-items">
+            {/* Список товаров */}
+            <div className="cart-drawer__items">
               {cartItems.map(item => (
                 <div key={item.id} className="cart-item">
-                  <img src={item.img} alt={item.name} />
+                  <img
+                    className="cart-item__img"
+                    src={item.img}
+                    alt={item.name}
+                  />
                   <div className="cart-item__info">
                     <p className="cart-item__name">{item.name}</p>
                     <p className="cart-item__article">Арт: {item.article}</p>
@@ -102,20 +107,25 @@ export default function CartDrawer() {
                     </div>
                   </div>
                   <button
+                    className="cart-item__remove"
                     onClick={() => removeFromCart(item.id)}
                     type="button"
-                    style={{ cursor: 'pointer', background: 'none', border: 'none', fontSize: '18px' }}
                   >✕</button>
                 </div>
               ))}
             </div>
 
-            <div className="cart-footer">
-              <p className="cart-total">
-                Итого: <strong>{totalPrice.toLocaleString('ru-KZ')} ₸</strong>
-              </p>
-              {/* ✅ Теперь открывает модальное окно, а не alert */}
-              <button className="btn-checkout" onClick={handleOpenModal} type="button">
+            {/* Футер */}
+            <div className="cart-drawer__footer">
+              <div className="cart-drawer__total">
+                <span>Итого:</span>
+                <strong>{totalPrice.toLocaleString('ru-KZ')} ₸</strong>
+              </div>
+              <button
+                className="cart-drawer__checkout"
+                onClick={handleOpenModal}
+                type="button"
+              >
                 📝 Оформить заявку
               </button>
             </div>
@@ -123,7 +133,7 @@ export default function CartDrawer() {
         )}
       </div>
 
-      {/* ✅ Модальное окно с формой */}
+      {/* Модальное окно */}
       {showModal && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -155,7 +165,6 @@ export default function CartDrawer() {
                     placeholder="Иван Иванов"
                   />
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="cart-phone">Телефон *</label>
                   <input
@@ -168,7 +177,6 @@ export default function CartDrawer() {
                     placeholder="+7 (___) ___-__-__"
                   />
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="cart-comment">Комментарий</label>
                   <textarea
@@ -180,7 +188,6 @@ export default function CartDrawer() {
                     rows="3"
                   />
                 </div>
-
                 <button type="submit" className="btn-submit" disabled={submitting}>
                   {submitting ? 'Отправка...' : 'Отправить заявку'}
                 </button>
