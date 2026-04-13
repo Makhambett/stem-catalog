@@ -1,14 +1,16 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useUserEmail } from './UserEmailContext'
+import { useAuth } from './AuthContext'
 
 const FavoritesContext = createContext()
+
 const getFavKey = (email) => email ? `stem_favorites_${email}` : null
 
 export function FavoritesProvider({ children }) {
   const { userEmail } = useUserEmail()
+  const { user, openModal } = useAuth()
   const [favorites, setFavorites] = useState([])
 
-  // Загружаем при смене пользователя
   useEffect(() => {
     if (userEmail) {
       const saved = localStorage.getItem(getFavKey(userEmail))
@@ -18,7 +20,6 @@ export function FavoritesProvider({ children }) {
     }
   }, [userEmail])
 
-  // Сохраняем при изменении
   useEffect(() => {
     if (userEmail) {
       localStorage.setItem(getFavKey(userEmail), JSON.stringify(favorites))
@@ -26,6 +27,12 @@ export function FavoritesProvider({ children }) {
   }, [favorites, userEmail])
 
   const toggleFavorite = (product) => {
+    // 🔒 Блокируем неавторизованных
+    if (!user) {
+      openModal()
+      return
+    }
+
     setFavorites(prev => {
       const exists = prev.find(item => item.id === product.id)
       if (exists) {

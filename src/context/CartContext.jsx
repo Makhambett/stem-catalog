@@ -1,11 +1,14 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useUserEmail } from './UserEmailContext'
+import { useAuth } from './AuthContext'
 
 const CartContext = createContext()
+
 const getCartKey = (email) => email ? `stem_cart_${email}` : null
 
 export function CartProvider({ children }) {
   const { userEmail } = useUserEmail()
+  const { user, openModal } = useAuth()
   const [cartItems, setCartItems] = useState([])
   const [isOpen, setIsOpen] = useState(false)
 
@@ -25,7 +28,12 @@ export function CartProvider({ children }) {
   }, [cartItems, userEmail])
 
   const addToCart = (product) => {
-    // ✅ Нормализация — работает для всех компонентов
+    // 🔒 Блокируем неавторизованных
+    if (!user) {
+      openModal()
+      return
+    }
+
     const normalizedProduct = {
       ...product,
       name: product.name || product.title,
@@ -45,8 +53,7 @@ export function CartProvider({ children }) {
     })
   }
 
-  const removeFromCart = (id) =>
-    setCartItems(prev => prev.filter(item => item.id !== id))
+  const removeFromCart = (id) => setCartItems(prev => prev.filter(item => item.id !== id))
 
   const increaseQty = (id) => {
     setCartItems(prev =>
@@ -74,10 +81,16 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider value={{
-      cartItems, addToCart, removeFromCart,
-      increaseQty, decreaseQty, clearCart,
-      totalCount, totalPrice,
-      isOpen, setIsOpen
+      cartItems,
+      addToCart,
+      removeFromCart,
+      increaseQty,
+      decreaseQty,
+      clearCart,
+      isOpen,
+      setIsOpen,
+      totalCount,
+      totalPrice,
     }}>
       {children}
     </CartContext.Provider>
