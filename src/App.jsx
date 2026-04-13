@@ -39,7 +39,7 @@ import Standartnye from './pages/categories/Standartnye'
 // Оборудование
 import Ulab from './pages/equipment/Ulab'
 import Labdisc from './pages/equipment/Labdisc'
-
+import Party from './pages/categories/Party'
 // Декор
 import Gos from './pages/decor/Gos'
 import Panels3D from './pages/decor/Panels3D'
@@ -109,7 +109,7 @@ export default function App() {
         <Route path="/secondpage/shkafy" element={<Shkafy />} />
         <Route path="/secondpage/shkafy/vstroenye" element={<Vstroenye />} />
         <Route path="/secondpage/shkafy/standartnye" element={<Standartnye />} />
-        
+        <Route path="/secondpage/stoly/party" element={<Party />} />
         {/* Оборудование */}
         <Route path="/equipment/ulab" element={<Ulab />} />
         <Route path="/equipment/labdisc" element={<Labdisc />} />
