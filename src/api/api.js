@@ -1,6 +1,6 @@
-const BASE_URL = 
-  import.meta.env.VITE_API_URL_BACKEND || 
-  import.meta.env.VITE_API_URL || 
+const BASE_URL =
+  import.meta.env.VITE_API_URL_BACKEND ||
+  import.meta.env.VITE_API_URL ||
   'http://localhost:8000'
 
 // ===== ПРОДУКТЫ =====
@@ -48,33 +48,28 @@ export async function createApplication(data) {
 
 // ===== АВТОРИЗАЦИЯ =====
 export async function login(email, password) {
-  // ✅ Исправлено: JSON вместо form-urlencoded
   const res = await fetch(`${BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
   })
-
   if (!res.ok) {
     const text = await res.text()
     throw new Error(text || 'Неверный email или пароль')
   }
-
   return res.json()
 }
 
-export async function register(email, password, name) {
+export async function register(email, password, name, phone = '') {
   const res = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password })
+    body: JSON.stringify({ name, email, password, phone })  // ✅ phone добавлен
   })
-
   if (!res.ok) {
     const text = await res.text()
     throw new Error(text || 'Ошибка регистрации')
   }
-
   return res.json()
 }
 
@@ -85,7 +80,6 @@ export async function getCurrentUser(token) {
       'Authorization': `Bearer ${token}`
     }
   })
-
   if (!res.ok) throw new Error('Failed to fetch user')
   return res.json()
 }

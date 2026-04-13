@@ -1,53 +1,44 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { login as apiLogin, register as apiRegister } from '../api/api'
 import './AuthModal.css'
 
 export default function AuthModal() {
-  // ✅ Получаем showModal и closeModal из контекста
   const { showModal, login, register, closeModal } = useAuth()
-  
+
   const [mode, setMode] = useState('login')
   const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // ✅ Закрытие по Escape
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === 'Escape' && showModal) {
-        closeModal()
-      }
+      if (e.key === 'Escape' && showModal) closeModal()
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
   }, [closeModal, showModal])
 
-  // ✅ Блокировка скролла ТОЛЬКО когда модалка открыта
   useEffect(() => {
     if (showModal) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
     }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
+    return () => { document.body.style.overflow = 'unset' }
   }, [showModal])
 
-  // ✅ Если модалка не должна показываться — не рендерим ВООБЩЕ
   if (!showModal) return null
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
-    
     try {
       if (mode === 'register') {
-        await register(name, email, password)
+        await register(name, email, password, phone)
       } else {
         await login(email, password)
       }
@@ -56,6 +47,11 @@ export default function AuthModal() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const switchMode = (newMode) => {
+    setMode(newMode)
+    setError('')
   }
 
   return (
@@ -70,12 +66,12 @@ export default function AuthModal() {
         <div className="auth-box__tabs">
           <button
             className={`auth-box__tab ${mode === 'login' ? 'active' : ''}`}
-            onClick={() => { setMode('login'); setError('') }}
+            onClick={() => switchMode('login')}
             type="button"
           >Войти</button>
           <button
             className={`auth-box__tab ${mode === 'register' ? 'active' : ''}`}
-            onClick={() => { setMode('register'); setError('') }}
+            onClick={() => switchMode('register')}
             type="button"
           >Регистрация</button>
         </div>
@@ -94,6 +90,20 @@ export default function AuthModal() {
               />
             </div>
           )}
+
+          {mode === 'register' && (
+            <div className="auth-box__field">
+              <label>Номер телефона</label>
+              <input
+                type="tel"
+                placeholder="+7 (777) 000-00-00"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+          )}
+
           <div className="auth-box__field">
             <label>Email</label>
             <input
@@ -105,6 +115,7 @@ export default function AuthModal() {
               disabled={loading}
             />
           </div>
+
           <div className="auth-box__field">
             <label>Пароль</label>
             <input
@@ -127,44 +138,28 @@ export default function AuthModal() {
 
         <p className="auth-box__switch">
           {mode === 'login' ? (
-            <>Нет аккаунта? <button type="button" onClick={() => { setMode('register'); setError('') }} className="link-btn">Зарегистрироваться</button></>
+            <>Нет аккаунта? <button type="button" onClick={() => switchMode('register')} className="link-btn">Зарегистрироваться</button></>
           ) : (
-            <>Уже есть аккаунт? <button type="button" onClick={() => { setMode('login'); setError('') }} className="link-btn">Войти</button></>
+            <>Уже есть аккаунт? <button type="button" onClick={() => switchMode('login')} className="link-btn">Войти</button></>
           )}
         </p>
 
-        {/* ✅ КНОПКА ЗАКРЫТИЯ (X) — ИСПРАВЛЕНА */}
-        <button 
-          className="auth-box__close" 
-          onClick={(e) => { 
-            e.stopPropagation()  // ✅ Останавливаем всплытие (чтобы не закрылось по клику на backdrop)
-            closeModal()          // ✅ Закрываем модалку
-          }} 
-          type="button" 
+        <button
+          className="auth-box__close"
+          onClick={(e) => { e.stopPropagation(); closeModal() }}
+          type="button"
           aria-label="Закрыть"
           style={{
-            position: 'absolute',
-            top: '15px',
-            right: '15px',
-            background: 'none',
-            border: 'none',
-            fontSize: '28px',
-            cursor: 'pointer',
-            zIndex: 100,
-            width: '30px',
-            height: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '0',
-            color: '#666',
-            transition: 'color 0.2s'
+            position: 'absolute', top: '15px', right: '15px',
+            background: 'none', border: 'none', fontSize: '28px',
+            cursor: 'pointer', zIndex: 100, width: '30px', height: '30px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '0', color: '#666', transition: 'color 0.2s'
           }}
-          onMouseOver={(e) => e.currentTarget.style.color = '#000'}
-          onMouseOut={(e) => e.currentTarget.style.color = '#666'}
-        >
-          ✕
-        </button>
+          onMouseOver={e => e.currentTarget.style.color = '#000'}
+          onMouseOut={e => e.currentTarget.style.color = '#666'}
+        >✕</button>
+
       </div>
     </div>
   )

@@ -2,14 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { useUserEmail } from './UserEmailContext'
 import { login as apiLogin, register as apiRegister, logout as apiLogout, getCurrentUser } from '../api/api'
 
-// ✅ Создаём контекст
 const AuthContext = createContext(null)
-
-// ✅ Базовый URL для прямого fetch (если нужно)
-const API_BASE = 
-  import.meta.env.VITE_API_URL_BACKEND || 
-  import.meta.env.VITE_API_URL || 
-  'http://localhost:8000'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -17,12 +10,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const { setUserEmail } = useUserEmail()
 
-  // Проверка токена при загрузке
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem('stem_access_token')
-        
         if (token) {
           const userData = await getCurrentUser(token)
           setUser(userData)
@@ -32,16 +23,14 @@ export function AuthProvider({ children }) {
         console.error('Auth check error:', err)
         localStorage.removeItem('stem_access_token')
       } finally {
-        // ✅ Всегда завершаем загрузку, даже если была ошибка
         setLoading(false)
       }
     }
-    
     checkAuth()
   }, [setUserEmail])
 
-  const register = async (name, email, password) => {
-    const data = await apiRegister(email, password, name)
+  const register = async (name, email, password, phone = '') => {
+    const data = await apiRegister(email, password, name, phone)
     localStorage.setItem('stem_access_token', data.access_token)
     const userData = await getCurrentUser(data.access_token)
     setUser(userData)
@@ -69,27 +58,23 @@ export function AuthProvider({ children }) {
   const openModal = () => setShowModal(true)
   const closeModal = () => setShowModal(false)
 
-  // ✅ ВАЖНО: Provider рендерится ВСЕГДА, даже во время загрузки!
-  // Только внутри него мы можем условно рендерить children или лоадер
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      register, 
-      logout, 
-      showModal, 
-      openModal, 
+    <AuthContext.Provider value={{
+      user,
+      login,
+      register,
+      logout,
+      showModal,
+      openModal,
       closeModal,
       isAuthenticated: !!user,
-      loading  // ✅ Экспортируем состояние загрузки для детей
+      loading,
     }}>
-      {/* ✅ children рендерятся всегда, но можно добавить лоадер внутри если нужно */}
       {children}
     </AuthContext.Provider>
   )
 }
 
-// ✅ Хук с защитой от использования вне провайдера
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (context === null) {
