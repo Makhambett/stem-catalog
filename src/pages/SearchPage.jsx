@@ -5,6 +5,7 @@ import { getProducts } from '../api/api'
 import { useLang } from '../i18n/LanguageContext'
 import './SearchPage.css'
 
+
 const ProductCard = ({ product }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -47,6 +48,7 @@ const ProductCard = ({ product }) => {
     </Link>
   )
 }
+
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams()
@@ -121,9 +123,9 @@ export default function SearchPage() {
       ) : (
         <>
           <p className="search-count">
-            🔍 Найдено: <strong>{results.length}</strong> {results.length === 1 ? 'товар' : 'товаров'}
+            Найдено: <strong>{results.length}</strong> {results.length === 1 ? 'товар' : 'товаров'}
           </p>
-          
+
           <div className="search-grid" role="list">
             {results.map(product => (
               <ProductCard key={product.id} product={product} />
