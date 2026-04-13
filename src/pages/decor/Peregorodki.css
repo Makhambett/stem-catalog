@@ -1,7 +1,8 @@
 /* ===== СТРАНИЦА ПЕРЕГОРОДКИ ===== */
 .peregorodki-page {
-  padding: 0 40px 60px;
-  background: #f5f5f5;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
   min-height: 100vh;
 }
 
@@ -40,28 +41,33 @@
   gap: 20px;
 }
 
-/* ===== КАРТОЧКА ===== */
+/* ===== КАРТОЧКА — как у дивана ===== */
 .peregorodki-card {
   background: #fff;
-  border-radius: 12px;
-  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  border: 1px solid #e8e8e8;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  padding: 24px;
+  grid-template-columns: 420px 1fr;
+  gap: 32px;
+  padding: 28px;
   align-items: start;
 }
 
+/* ===== ГАЛЕРЕЯ ===== */
 .peregorodki-card__gallery {
   width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f7f7f7;
 }
 
 .peregorodki-card__gallery img {
   width: 100%;
-  height: 260px;
+  height: 300px;
   object-fit: contain;
-  border-radius: 8px;
-  background: #f9f9f9;
+  border-radius: 12px;
+  background: #f7f7f7;
+  display: block;
 }
 
 /* ===== МУЛЬТИКАРТИНКА ===== */
@@ -70,24 +76,23 @@
   flex-direction: row;
   gap: 8px;
   width: 100%;
-  height: 260px;
+  height: 300px;
 }
 
 .perego-img-item {
   flex: 1;
-  width: 50%;
   height: 100%;
   object-fit: contain;
-  background: #f9f9f9;
-  border-radius: 6px;
+  background: #f7f7f7;
+  border-radius: 8px;
 }
 
 /* ===== СКОРО заглушка ===== */
 .perego-img-soon {
   flex: 1;
-  height: 260px;
+  height: 300px;
   background: #f0f0f0;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,11 +101,11 @@
 
 .perego-soon-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
   background: #fff;
   border-radius: 20px;
-  padding: 3px 12px;
+  padding: 4px 14px;
   font-size: 12px;
   font-weight: 700;
   color: #111;
@@ -108,105 +113,136 @@
 }
 
 .perego-soon-text {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   color: #ccc;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
 }
 
 /* ===== ИНФО ===== */
+.peregorodki-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .peregorodki-card__info h2 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 10px;
+  color: #1a1a1a;
+  margin: 0;
 }
 
 .peregorodki-card__desc-label {
   font-size: 13px;
   font-weight: 600;
   color: #555;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .peregorodki-card__desc {
   font-size: 13px;
-  color: #444;
-  line-height: 1.6;
-  margin-bottom: 14px;
+  color: #555;
+  line-height: 1.65;
+  margin: 0;
 }
 
+/* ===== ТАБЛИЦА ===== */
 .peregorodki-card__table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
-  margin-bottom: 14px;
 }
 
 .peregorodki-card__table td {
-  padding: 6px 10px;
-  border: 1px solid #eee;
+  padding: 8px 12px;
+  border: 1px solid #f0f0f0;
 }
 
 .peregorodki-card__table td:first-child {
   font-weight: 600;
-  color: #555;
-  width: 100px;
+  color: #888;
+  width: 120px;
+  background: #fafafa;
 }
 
+/* ===== ДОСТАВКА ===== */
 .peregorodki-card__delivery {
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  gap: 4px;
   font-size: 13px;
   color: #555;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 14px;
 }
 
+/* ===== КНОПКА ЗАЯВКИ — фирменный зелёный ===== */
 .btn-order-full {
-  display: inline-block;
+  display: block;
   width: 100%;
-  padding: 10px;
-  background: #1a1a1a;
+  padding: 13px;
+  background: #2d6a4f;
   color: #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   text-align: center;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  margin-bottom: 10px;
   cursor: pointer;
+  border: none;
+  transition: background 0.2s;
 }
 
 .btn-order-full:hover {
-  background: #333;
+  background: #245a41;
 }
 
+/* ===== ПОДЕЛИТЬСЯ ===== */
 .peregorodki-card__share {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .peregorodki-card__share button {
   background: #f5f5f5;
   border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
+  border-radius: 8px;
+  padding: 7px 14px;
   font-size: 12px;
   cursor: pointer;
+  color: #444;
+  transition: background 0.2s;
 }
 
 .peregorodki-card__share button:hover {
-  background: #eee;
+  background: #ebebeb;
 }
 
 /* ===== MOBILE ===== */
-@media (max-width: 768px) {
-  .peregorodki-page {
-    padding: 0 16px 40px;
-  }
-
+@media (max-width: 900px) {
   .peregorodki-card {
     grid-template-columns: 1fr;
+  }
+
+  .peregorodki-card__gallery img {
+    height: 220px;
+  }
+
+  .perego-multi-img {
+    height: 220px;
+  }
+
+  .perego-img-soon {
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .peregorodki-page {
+    padding: 0 12px 40px;
   }
 
   .perego-multi-img {
@@ -216,10 +252,6 @@
 
   .perego-img-item {
     width: 100%;
-    height: 150px;
-  }
-
-  .perego-img-soon {
     height: 150px;
   }
 }
