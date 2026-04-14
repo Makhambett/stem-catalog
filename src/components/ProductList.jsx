@@ -5,8 +5,7 @@ import { useFavorites } from '../context/FavoritesContext'
 import { useCart } from '../context/CartContext'
 import './ProductList.css'
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL_BACKEND || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_URL_BACKEND || 'http://localhost:8000'
 
 function ApplicationModal({ product, onClose }) {
   const [form, setForm] = useState({
@@ -15,7 +14,6 @@ function ApplicationModal({ product, onClose }) {
     username: '',
     comment: '',
   })
-
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [phoneError, setPhoneError] = useState('')
@@ -25,10 +23,8 @@ function ApplicationModal({ product, onClose }) {
     const handler = (e) => {
       if (e.key === 'Escape') onClose()
     }
-
     document.addEventListener('keydown', handler)
     document.body.style.overflow = 'hidden'
-
     return () => {
       document.removeEventListener('keydown', handler)
       document.body.style.overflow = 'unset'
@@ -37,9 +33,7 @@ function ApplicationModal({ product, onClose }) {
 
   const validateName = (name) => {
     const cleaned = name.trim().replace(/\s+/g, ' ')
-    return /^[A-Za-zА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІіЁё]+(?:[ -][A-Za-zА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІіЁё]+)*$/.test(
-      cleaned
-    )
+    return /^[A-Za-zА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІіЁё]+(?:[ -][A-Za-zА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІіЁё]+)*$/.test(cleaned)
   }
 
   const validatePhone = (phone) => {
@@ -49,30 +43,23 @@ function ApplicationModal({ product, onClose }) {
 
   const formatPhone = (value) => {
     let digits = value.replace(/\D/g, '')
-
     if (digits.startsWith('8')) {
       digits = '7' + digits.slice(1)
     }
-
     if (digits.startsWith('7')) {
       digits = digits.slice(0, 11)
-
       const p1 = digits.slice(1, 4)
       const p2 = digits.slice(4, 7)
       const p3 = digits.slice(7, 9)
       const p4 = digits.slice(9, 11)
-
       let formatted = '+7'
-
       if (p1) formatted += ` (${p1}`
       if (p1.length === 3) formatted += ')'
       if (p2) formatted += ` ${p2}`
       if (p3) formatted += `-${p3}`
       if (p4) formatted += `-${p4}`
-
       return formatted
     }
-
     return value
   }
 
@@ -81,7 +68,6 @@ function ApplicationModal({ product, onClose }) {
       /[^A-Za-zА-Яа-яӘәҒғҚқҢңӨөҰұҮүҺһІіЁё\s-]/g,
       ''
     )
-
     setForm((prev) => ({ ...prev, name: filtered }))
     setNameError('')
   }
@@ -94,7 +80,6 @@ function ApplicationModal({ product, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     const cleanName = form.name.trim().replace(/\s+/g, ' ')
     const cleanPhone = form.phone.trim()
 
@@ -102,30 +87,24 @@ function ApplicationModal({ product, onClose }) {
       setNameError('Имя должно содержать минимум 2 символа')
       return
     }
-
     if (!validateName(cleanName)) {
       setNameError('Введите имя только буквами')
       return
     }
-
     if (!cleanPhone) {
       setPhoneError('Введите номер телефона')
       return
     }
-
     if (!validatePhone(cleanPhone)) {
       setPhoneError('Введите корректный номер телефона')
       return
     }
 
     setLoading(true)
-
     try {
       const response = await fetch(`${API_BASE_URL}/api/applications/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: cleanName,
           phone: cleanPhone,
@@ -136,11 +115,7 @@ function ApplicationModal({ product, onClose }) {
           product_url: window.location.href,
         }),
       })
-
-      if (!response.ok) {
-        throw new Error('Ошибка отправки')
-      }
-
+      if (!response.ok) throw new Error('Ошибка отправки')
       setSent(true)
     } catch {
       alert('Не удалось отправить заявку. Попробуйте позже.')
@@ -152,26 +127,20 @@ function ApplicationModal({ product, onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} type="button">
-          ×
-        </button>
-
+        <button className="modal-close" onClick={onClose} type="button">×</button>
         {sent ? (
           <div className="modal-success">
-            <strong>✅ Заявка отправлена!</strong>
-            Менеджер свяжется с вами в ближайшее время.
+            <strong>✅ Заявка отправлена!</strong> Менеджер свяжется с вами в ближайшее время.
           </div>
         ) : (
           <>
             <h3 className="modal-title">Оставить заявку</h3>
             <p className="modal-product-name">{product.title}</p>
-
             {product.article && (
               <p className="modal-article">Артикул: {product.article}</p>
             )}
-
-            <form className="modal-form" onSubmit={handleSubmit}>
-              <div>
+            <form onSubmit={handleSubmit} className="modal-form">
+              <div className="modal-field">
                 <input
                   className="modal-input"
                   type="text"
@@ -182,8 +151,7 @@ function ApplicationModal({ product, onClose }) {
                 />
                 {nameError && <span className="modal-error">{nameError}</span>}
               </div>
-
-              <div>
+              <div className="modal-field">
                 <input
                   className="modal-input"
                   type="tel"
@@ -192,40 +160,25 @@ function ApplicationModal({ product, onClose }) {
                   onChange={handlePhoneChange}
                   required
                 />
-                {phoneError && (
-                  <span className="modal-error">{phoneError}</span>
-                )}
+                {phoneError && <span className="modal-error">{phoneError}</span>}
               </div>
-
-              <div>
+              <div className="modal-field">
                 <input
                   className="modal-input"
                   type="text"
                   placeholder="Telegram username (необязательно)"
                   value={form.username}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      username: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => setForm((prev) => ({ ...prev, username: e.target.value }))}
                 />
               </div>
-
-              <div>
+              <div className="modal-field">
                 <textarea
                   className="modal-input modal-textarea"
                   placeholder="Комментарий"
                   value={form.comment}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      comment: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => setForm((prev) => ({ ...prev, comment: e.target.value }))}
                 />
               </div>
-
               <button type="submit" className="btn-order" disabled={loading}>
                 {loading ? 'Отправка...' : 'Отправить заявку'}
               </button>
@@ -248,23 +201,16 @@ function ImagePlaceholder() {
 
 function ProductCard({ product }) {
   const [showModal, setShowModal] = useState(false)
-  const [activeColor, setActiveColor] = useState(0)
   const [addedToCart, setAddedToCart] = useState(false)
   const [imgError, setImgError] = useState(false)
-
   const { t } = useLang()
   const { toggleFavorite, isFavorite } = useFavorites()
   const { addToCart } = useCart()
 
   const img = Array.isArray(product.imgs) ? product.imgs[0] : product.img
-  const size = Array.isArray(product.size)
-    ? product.size.join(', ')
-    : product.size
-  const material = Array.isArray(product.material)
-    ? product.material.join(', ')
-    : product.material
+  const size = Array.isArray(product.size) ? product.size.join(', ') : product.size
+  const material = Array.isArray(product.material) ? product.material.join(', ') : product.material
   const colors = product.colors || []
-
   const inFavorite = isFavorite(product.id)
   const showPlaceholder = !img || imgError
 
@@ -278,13 +224,8 @@ function ProductCard({ product }) {
       price: product.price || 0,
       article: product.article,
     })
-
     setAddedToCart(true)
     setTimeout(() => setAddedToCart(false), 2000)
-  }
-
-  const handleFavoriteClick = () => {
-    toggleFavorite(product)
   }
 
   return (
@@ -302,42 +243,22 @@ function ProductCard({ product }) {
               onError={() => setImgError(true)}
             />
           )}
-
           {product.in_stock === false && (
             <span className="badge-out">Нет в наличии</span>
           )}
         </div>
-
         <div className="divan-card__info">
           <h2 className="divan-card__title">{product.title}</h2>
           <p className="divan-card__desc">{product.description}</p>
 
           {colors.length > 0 && (
             <div className="divan-card__section">
-              <span className="divan-card__label">
-                Цвет: <strong>{colors[activeColor]?.name || 'Стандарт'}</strong>
-              </span>
-
-              <div className="divan-card__colors">
-                {colors.map((color, index) => (
-                  <button
-                    key={index}
-                    className={`color-dot ${
-                      index === activeColor ? 'active' : ''
-                    }`}
-                    style={{ backgroundColor: color.hex }}
-                    onClick={() => setActiveColor(index)}
-                    title={color.name}
-                    type="button"
-                  />
-                ))}
-              </div>
+              <span className="divan-card__label">По согласованию с заказчиком</span>
             </div>
           )}
 
           <div className="divan-card__section">
             <span className="divan-card__label">Характеристики:</span>
-
             <table className="divan-card__table">
               <tbody>
                 {material && (
@@ -346,14 +267,12 @@ function ProductCard({ product }) {
                     <td>{material}</td>
                   </tr>
                 )}
-
                 {size && (
                   <tr>
                     <td>Размеры</td>
                     <td>{size}</td>
                   </tr>
                 )}
-
                 {product.article && (
                   <tr>
                     <td>Артикул</td>
@@ -378,10 +297,9 @@ function ProductCard({ product }) {
             >
               {addedToCart ? '✓ Добавлено!' : '🛒 В корзину'}
             </button>
-
             <button
               className={`btn-favorite ${inFavorite ? 'active' : ''}`}
-              onClick={handleFavoriteClick}
+              onClick={() => toggleFavorite(product)}
               type="button"
               aria-pressed={inFavorite}
             >
@@ -398,7 +316,6 @@ function ProductCard({ product }) {
           </button>
         </div>
       </div>
-
       {showModal && (
         <ApplicationModal product={product} onClose={handleClose} />
       )}
@@ -428,9 +345,7 @@ export default function ProductList({ products, title, backPath, backLabel }) {
         <Link to="/" className="breadcrumb-link">
           {t.home || 'Главная'}
         </Link>
-
         <span> / </span>
-
         {backPath && (
           <>
             <Link to={backPath} className="breadcrumb-link">
@@ -439,14 +354,11 @@ export default function ProductList({ products, title, backPath, backLabel }) {
             <span> / </span>
           </>
         )}
-
         <span>{title}</span>
       </div>
-
       <h1 className="divany-title">
         {title} <span>{products.length} товаров</span>
       </h1>
-
       <div className="divany-list">
         {products.map((product) => (
           <ProductCard key={product.id || product.article} product={product} />
