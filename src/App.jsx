@@ -4,7 +4,6 @@ import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import FloatingButtons from './components/FloatingButtons'
-import AIWelcome from './components/AIWelcome'
 import CartDrawer from './components/CartDrawer'
 import AuthModal from './components/AuthModal'
 
@@ -133,7 +132,6 @@ export default function App() {
 
       <Footer />
       <FloatingButtons />
-      <AIWelcome />
     </>
   )
 }
