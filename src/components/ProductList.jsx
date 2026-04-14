@@ -253,7 +253,9 @@ function ProductCard({ product }) {
 
           {colors.length > 0 && (
             <div className="divan-card__section">
-              <span className="divan-card__label">По согласованию с заказчиком</span>
+              <span className="divan-card__label">
+                Цвет: По согласованию с заказчиком
+              </span>
             </div>
           )}
 
